@@ -12,11 +12,14 @@
 
     <com.kevinj.floatlabelpattern.FloatLabelTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        custom:editText_hint="First Floating View"
+        custom:editText_color="#FF0000"
+        custom:editText_size="16dp"/>
 
     <com.kevinj.floatlabelpattern.FloatLabelTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        custom:editText_hint="Second Floating View"/>
+        custom:editText_hint="Second"/>
 
 </LinearLayout>
