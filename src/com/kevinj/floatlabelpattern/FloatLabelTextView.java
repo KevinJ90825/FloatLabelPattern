@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,13 +26,13 @@ public class FloatLabelTextView extends LinearLayout {
 	private static final String TAG = "FloatLabelTextView";
 
 	private static long ANIMATION_DURATION = 400;
-	private static int HINT_DEFAULT_COLOR = 0xFF3019FC;
+	private static int HINT_DEFAULT_COLOR = 0xFF006363;
 	private static final int HINT_DEFAULT_COLOR_DISABLED = 0xFFCCCCCC;
 	private static int HINT_DEFAULT_SIZE = 13;
 
 	private TextView mHintView;
 	private EditText mEditText;
-	
+
 	private int mHintColor;
 
 	private AnimatorSet mEntranceAnimation = null;
@@ -55,19 +56,25 @@ public class FloatLabelTextView extends LinearLayout {
 
 		TypedArray array = context.obtainStyledAttributes(attrs,
 				R.styleable.FloatLabelTextView, 0, 0);
-		String hint = array.getString(
-				R.styleable.FloatLabelTextView_editText_hint);
-		mHintColor = array.getColor(R.styleable.FloatLabelTextView_editText_color, HINT_DEFAULT_COLOR);
-		float size = array.getDimension(R.styleable.FloatLabelTextView_editText_size, HINT_DEFAULT_SIZE);
-		
+		String hint = array
+				.getString(R.styleable.FloatLabelTextView_editText_hint);
+		mHintColor = array.getColor(
+				R.styleable.FloatLabelTextView_editText_color,
+				HINT_DEFAULT_COLOR);
+		float size = array
+				.getDimension(R.styleable.FloatLabelTextView_editText_size,
+						HINT_DEFAULT_SIZE);
+
 		array.recycle();
 
 		mHintView = (TextView) findViewById(R.id.textview_float);
 		mEditText = (EditText) findViewById(R.id.textview_main);
 
+		mHintView.setTextColor(HINT_DEFAULT_COLOR_DISABLED);
+
 		mHintView.setText(hint);
 		mEditText.setHint(hint);
-		
+
 		mHintView.setTextSize(size);
 
 		mEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -106,23 +113,25 @@ public class FloatLabelTextView extends LinearLayout {
 			}
 		});
 	}
-	
-	protected ValueAnimator getAddColorAnimation()
-	{
-		if (mAddColorAnimation == null)
-		{
-			mAddColorAnimation = ObjectAnimator.ofInt(mHintView, "textColor", HINT_DEFAULT_COLOR_DISABLED, mHintColor);
+
+	public void addTextChangedListener(TextWatcher watcher) {
+		mEditText.addTextChangedListener(watcher);
+	}
+
+	protected ValueAnimator getAddColorAnimation() {
+		if (mAddColorAnimation == null) {
+			mAddColorAnimation = ObjectAnimator.ofInt(mHintView, "textColor",
+					HINT_DEFAULT_COLOR_DISABLED, mHintColor);
 			mAddColorAnimation.setEvaluator(new ArgbEvaluator());
 			mAddColorAnimation.setDuration(ANIMATION_DURATION);
 		}
 		return mAddColorAnimation;
 	}
-	
-	protected ValueAnimator getRemoveColorAnimation()
-	{
-		if (mRemoveColorAnimation == null)
-		{
-			mRemoveColorAnimation = ObjectAnimator.ofInt(mHintView, "textColor", mHintColor, HINT_DEFAULT_COLOR_DISABLED);
+
+	protected ValueAnimator getRemoveColorAnimation() {
+		if (mRemoveColorAnimation == null) {
+			mRemoveColorAnimation = ObjectAnimator.ofInt(mHintView,
+					"textColor", mHintColor, HINT_DEFAULT_COLOR_DISABLED);
 			mRemoveColorAnimation.setEvaluator(new ArgbEvaluator());
 			mRemoveColorAnimation.setDuration(ANIMATION_DURATION);
 		}
@@ -159,6 +168,24 @@ public class FloatLabelTextView extends LinearLayout {
 
 		return mExitAnimation;
 	}
+	
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		mEditText.setOnClickListener(l);
+		super.setOnClickListener(l);
+	}
+	
+	@Override
+	public void setTag(Object tag) {
+		mEditText.setTag(tag);
+		super.setTag(tag);
+	}
+	
+	@Override
+	public void setTag(int key, Object tag) {
+		mEditText.setTag(key, tag);
+		super.setTag(key, tag);
+	}
 
 	protected AnimatorSet getEntranceAnimation() {
 		if (mEntranceAnimation == null) {
@@ -190,15 +217,26 @@ public class FloatLabelTextView extends LinearLayout {
 
 		return mEntranceAnimation;
 	}
-	
-	public void setAnimationDuration(long duration)
-	{
+
+	public void setAnimationDuration(long duration) {
 		ANIMATION_DURATION = duration;
 	}
 
-	public void setText(String text) {
+	public void setHint(String text) {
 		mHintView.setText(text);
 		mEditText.setHint(text);
+	}
+
+	public void setKeyListener(KeyListener input) {
+		mEditText.setKeyListener(input);
+	}
+
+	public void setText(CharSequence text) {
+		mEditText.setText(text);
+	}
+
+	public void setText(String text) {
+		mEditText.setText(text);
 	}
 
 	public void setTextColor(ColorStateList colors) {
@@ -207,10 +245,6 @@ public class FloatLabelTextView extends LinearLayout {
 
 	public void setTextColor(int color) {
 		mHintView.setTextColor(color);
-	}
-
-	public void setTextDirection(int textDirection) {
-		mHintView.setTextDirection(textDirection);
 	}
 
 	public void setTextSize(float size) {
@@ -227,10 +261,6 @@ public class FloatLabelTextView extends LinearLayout {
 
 	public void setTypeface(Typeface tf) {
 		mHintView.setTypeface(tf);
-	}
-
-	public void setVisibility(int visibility) {
-		mHintView.setVisibility(visibility);
 	}
 
 }
