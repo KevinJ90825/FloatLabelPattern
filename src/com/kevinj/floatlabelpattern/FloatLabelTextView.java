@@ -268,6 +268,10 @@ public class FloatLabelTextView extends LinearLayout {
 	public void setTextColor(int color) {
 		mHintView.setTextColor(color);
 	}
+	
+	public Editable getText() {
+		return mEditText.getText();
+	}
 
 	public void setTextSize(float size) {
 		mHintView.setTextSize(size);
